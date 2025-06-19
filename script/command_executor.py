@@ -2,7 +2,7 @@ import subprocess
 import sys
 import logging
 
-class TerminalProcessor:
+class CommandExecutor:
     def __init__(self, logger: logging.Logger):
         # Logger instance is required
         self.logger = logger
