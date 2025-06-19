@@ -1,0 +1,6 @@
+from typing import Protocol, runtime_checkable
+
+@runtime_checkable
+class Logger(Protocol):
+    def debug(self, message: str) -> None: ...
+    def error(self, message: str) -> None: ...

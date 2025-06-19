@@ -1,36 +1,51 @@
 from command_executor import CommandExecutor
 from pathlib import Path
+from interfaces.command_runner import CommandRunner
+from interfaces.logger import Logger
 
-def check_if_current_is_git_repo(executor: CommandExecutor) -> bool:
+
+def check_if_current_is_git_repo(
+    runner: CommandRunner,
+    logger: Logger,
+    path: Path = Path(".")
+) -> bool:
     """Check if the current path is a Git repository."""
     try:
-        executor.execute_command(["git", "-C", Path(".").resolve(), "rev-parse", "--is-inside-work-tree"])
-        executor.logger.debug(f"Current folder is Git repository.")
+        runner.execute_command(["git", "-C", str(path.resolve()), "rev-parse", "--is-inside-work-tree"])
+        logger.debug(f"Current folder {path} is Git repository.")
         return True
     except SystemExit:
-        executor.logger.debug(f"Current folder ' is NOT a Git repository.")
+        logger.debug(f"Current folder {path} is NOT a Git repository.")
         return False
     
-def check_if_branch_exists(executor: CommandExecutor, branch_name: str) -> bool:
+def check_if_branch_exists(
+    runner: CommandRunner,
+    logger: Logger,
+    branch_name: str
+) -> bool:
     """Check if a specified branch exists in the Git repository."""
     try:
-        executor.execute_command(["git", "rev-parse", "--verify", branch_name])
-        executor.logger.debug(f"Branch '{branch_name}' exists.")
+        runner.execute_command(["git", "rev-parse", "--verify", branch_name])
+        logger.debug(f"Branch '{branch_name}' exists.")
         return True
     except SystemExit:
-        executor.logger.debug(f"Branch '{branch_name}' does NOT exist.")
+        logger.debug(f"Branch '{branch_name}' does NOT exist.")
         return False
 
-
-def get_actual_git_branch(executor: CommandExecutor) -> str:
+def get_actual_git_branch(
+    runner: CommandRunner,
+    logger: Logger
+) -> str:
     """Return the current Git branch name."""
-    branch = executor.execute_command(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    executor.logger.debug(f"Retrieved current branch: {branch}")
+    branch = runner.execute_command(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    logger.debug(f"Retrieved current branch: {branch}")
     return branch
 
-
-def get_direct_branch_parent(executor: CommandExecutor) -> str:
+def get_direct_branch_parent(
+    runner: CommandRunner,
+    logger: Logger
+) -> str:
     """Return the parent branch of the current Git branch."""
-    parent = executor.execute_command(["git", "rev-parse", "--abbrev-ref", "HEAD^"])
-    executor.logger.debug(f"Retrieved parent branch: {parent}")
+    parent = runner.execute_command(["git", "rev-parse", "--abbrev-ref", "HEAD^"])
+    logger.debug(f"Retrieved parent branch: {parent}")
     return parent

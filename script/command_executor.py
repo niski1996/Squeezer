@@ -1,38 +1,30 @@
 import subprocess
+from interfaces.logger import Logger
 import sys
 import logging
 
-class CommandExecutor:
-    def __init__(self, logger: logging.Logger):
-        # Logger instance is required
+class DefaultCommandExecutor:
+    def __init__(self, logger: Logger):
         self.logger = logger
 
-
-    def execute_command(self, args) -> str:
-        if args is None or not isinstance(args, list):
-            raise ValueError("Argument 'args' must be a list of command arguments.")
-        args = [str(arg) for arg in args]
-        command = " ".join(args)
-
-
+    def execute_command(self, args: list[str]) -> str:
+        if not args or not isinstance(args, list):
+            raise ValueError("Argument 'args' must be a non-empty list of command arguments.")
+        
+        command_str = " ".join(str(arg) for arg in args)
+        self.logger.debug(f"Executing command: {command_str}")
 
         try:
-            self.logger.debug(f"Executing command: {command}")
-            # Run subprocess command and capture output
             result = subprocess.run(
                 args,
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True  # Decode bytes to str automatically
+                text=True
             )
-            output = result.stdout.strip()
-
-            return output
+            return result.stdout.strip()
 
         except subprocess.CalledProcessError as e:
-            # Log error message and exit
-            self.logger.error(f"Command failed: {command}")
-            error_msg = f"Error fetching parent branch: {e.stderr.strip()}"
+            error_msg = f"Command failed: {command_str}\nError: {e.stderr.strip()}"
             self.logger.error(error_msg)
             raise SystemExit(f"❌ {error_msg}")

@@ -3,7 +3,8 @@ from pathlib import Path
 import argparse
 import logging
 from command_executor import CommandExecutor
-from check_and_gen_fun import check_if_current_is_git_repo, get_actual_git_branch, get_direct_branch_parent  # zakładam, że tak są zaimplementowane
+from check_and_gen_fun import *
+from git_function import *
 
 
 def setup_logger(verbose: bool = False) -> logging.Logger:
@@ -60,6 +61,13 @@ def main():
         sys.exit(1)
     target_branch = actual_branch.rstrip(" !\n")
     auxiliary_branch = f"{target_branch}-{AUXILIARY_BRANCH_SUFFIX}"
+
+    target_branch_exists = check_if_branch_exists(executor, target_branch)
+    auxiliary_branch_exists = check_if_branch_exists(executor, auxiliary_branch)
+    if not target_branch_exists or not auxiliary_branch_exists:
+        if not target_branch_exists:
+            logger.error(f"Target branch '{target_branch}' does not exist.")
+        
     
     
 
