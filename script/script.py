@@ -59,6 +59,7 @@ def main():
         logger.error(f"{actual_branch} has no parent branch. Check if it isn't a root branch.")
         sys.exit(1)
     target_branch = actual_branch.rstrip(" !\n")
+    auxiliary_branch = f"{target_branch}-{AUXILIARY_BRANCH_SUFFIX}"
     
     
 

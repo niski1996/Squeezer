@@ -10,6 +10,16 @@ def check_if_current_is_git_repo(executor: CommandExecutor) -> bool:
     except SystemExit:
         executor.logger.debug(f"Current folder ' is NOT a Git repository.")
         return False
+    
+def check_if_branch_exists(executor: CommandExecutor, branch_name: str) -> bool:
+    """Check if a specified branch exists in the Git repository."""
+    try:
+        executor.execute_command(["git", "rev-parse", "--verify", branch_name])
+        executor.logger.debug(f"Branch '{branch_name}' exists.")
+        return True
+    except SystemExit:
+        executor.logger.debug(f"Branch '{branch_name}' does NOT exist.")
+        return False
 
 
 def get_actual_git_branch(executor: CommandExecutor) -> str:
