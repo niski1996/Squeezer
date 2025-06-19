@@ -1,13 +1,14 @@
 from command_executor import CommandExecutor
+from pathlib import Path
 
-def is_git_repo(executor: CommandExecutor, path: str = "./") -> bool:
-    """Check if the given path is a Git repository."""
+def is_git_repo(executor: CommandExecutor) -> bool:
+    """Check if the current path is a Git repository."""
     try:
-        executor.execute_command(["git", "-C", path, "rev-parse", "--is-inside-work-tree"])
-        executor.logger.debug(f"Path '{path}' is a Git repository.")
+        executor.execute_command(["git", "-C", Path(".").resolve(), "rev-parse", "--is-inside-work-tree"])
+        executor.logger.debug(f"Current folder is Git repository.")
         return True
     except SystemExit:
-        executor.logger.debug(f"Path '{path}' is NOT a Git repository.")
+        executor.logger.debug(f"Current folder ' is NOT a Git repository.")
         return False
 
 
