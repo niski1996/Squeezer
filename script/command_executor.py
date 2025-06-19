@@ -11,7 +11,9 @@ class CommandExecutor:
     def execute_command(self, args) -> str:
         if args is None or not isinstance(args, list):
             raise ValueError("Argument 'args' must be a list of command arguments.")
+        args = [str(arg) for arg in args]
         command = " ".join(args)
+
 
 
         try:

@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse
 import logging
 from command_executor import CommandExecutor
-from check_and_gen_fun import is_git_repo, actual_git_branch, direct_branch_parent  # zakładam, że tak są zaimplementowane
+from check_and_gen_fun import check_if_current_is_git_repo, get_actual_git_branch, get_direct_branch_parent  # zakładam, że tak są zaimplementowane
 
 
 def setup_logger(verbose: bool = False) -> logging.Logger:
@@ -43,18 +43,25 @@ def main():
     current_dir = Path(".").resolve()
     logger.debug(f"Checking directory: {current_dir}")
 
-    if is_git_repo(executor):
+    if check_if_current_is_git_repo(executor):
         logger.info(f"Directory '{current_dir}' IS a Git repository.")
     else:
         logger.error(f"Directory '{current_dir}' is NOT a Git repository.")
         sys.exit(1)
 
-    actual_branch = actual_git_branch(executor)
+    actual_branch = get_actual_git_branch(executor)
     logger.info(f"Current directory: {current_dir}")
     logger.info(f"Current branch: {actual_branch}")
 
-    parent_branch = direct_branch_parent(executor)
+    parent_branch = get_direct_branch_parent(executor)
     logger.info(f"Parent branch: {parent_branch}")
+    if not parent_branch:
+        logger.error(f"{actual_branch} has no parent branch. Check if it isn't a root branch.")
+        sys.exit(1)
+    target_branch = actual_branch.rstrip(" !\n")
+    
+    
+
 
     if args.message:
         logger.info(f"Message: {args.message}")
