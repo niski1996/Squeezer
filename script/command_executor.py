@@ -33,4 +33,4 @@ class CommandExecutor:
             self.logger.error(f"Command failed: {command}")
             error_msg = f"Error fetching parent branch: {e.stderr.strip()}"
             self.logger.error(error_msg)
-            sys.exit(1)
+            raise SystemExit(f"❌ {error_msg}")
