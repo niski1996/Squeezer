@@ -81,7 +81,16 @@ def direct_branch_parent(logger=None):
 
 def main():
     """Główna funkcja skryptu."""
-    parser = argparse.ArgumentParser(description='Skrypt do sprawdzania repozytorium Git.')
+
+    #variables
+    AUXILIARY_BRANCH_SUFIX = "dev"
+    TAG_LIMITER = {"open": "[", "close": "]"}
+    REQUIRED_TAGS = ["major", "minor", "patch", "config"]
+
+
+
+
+    parser = arpython skrypt.py -vgparse.ArgumentParser(description='Skrypt do sprawdzania repozytorium Git.')
     parser.add_argument('-v', '--verbose', action='store_true', help='Tryb verbose - pokazuje więcej informacji')
     parser.add_argument('-m', '--message', type=str, help='Wiadomość do wyświetlenia')
     
@@ -102,6 +111,8 @@ def main():
     
     logger.info(f"Aktualny katalog: {current_dir}")
     logger.info(f"Aktualna gałąź: {actual_branch}")
+    
+    parent_branch = direct_branch_parent(logger=logger)
     
     if args.message:
         logger.info(f"Wiadomość: {args.message}")
